@@ -149,6 +149,7 @@
             this.searchTerm.TabIndex = 2;
             this.searchTerm.Text = "type search term here...";
             this.searchTerm.WordWrap = false;
+            this.searchTerm.Click += new System.EventHandler(this.SearchTerm_Enter);
             this.searchTerm.Enter += new System.EventHandler(this.SearchTerm_Enter);
             // 
             // tableLayoutPanel1

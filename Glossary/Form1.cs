@@ -31,7 +31,7 @@ namespace Glossary
         public mainWindowForm()
         {
             InitializeComponent();
-            StartInitializingDatabaseMemoryStatus();
+            InitMemoryStatusUpdater();
             InitProgressbarUpdater();
             InitDbLoadWorker();
             InitSearchWorker();
@@ -48,7 +48,7 @@ namespace Glossary
         /// <summary>
         /// Updates the status label for used memory every 200ms
         /// </summary>
-        private void StartInitializingDatabaseMemoryStatus()
+        private void InitMemoryStatusUpdater()
         {
             long memory = GC.GetTotalMemory(true)/1000000;
             statusMemoryLabel.Text = memory.ToString("N0") + " MB";
@@ -58,6 +58,20 @@ namespace Glossary
             {
                 memory = GC.GetTotalMemory(true)/1000000;
                 statusMemoryLabel.Text = memory.ToString("N0") + " MB";
+            };
+            timer.Start();
+        }
+        
+        /// <summary>
+        /// updates the progress bar for running tasks
+        /// </summary>
+        private void InitProgressbarUpdater()
+        {
+            timer = new Timer { Interval = 200 };
+            timer.Tick += (o, args) =>
+            {
+                statusProgressBar.Value = db.progress;
+                //Console.WriteLine(db.progress);
             };
             timer.Start();
         }
@@ -121,24 +135,10 @@ namespace Glossary
             db.InitDatabase();
         }
 
-        /// <summary>
-        /// updates the progress bar for running tasks
-        /// </summary>
-        private void InitProgressbarUpdater()
-        {
-            timer = new Timer { Interval = 200 };
-            timer.Tick += (o, args) =>
-            {
-                statusProgressBar.Value = db.progress;
-            };
-            timer.Start();
-        }
-
         private void DbLoadWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             watch.Stop();
             statusLabel.Text = "Loaded " + db.getNumberOfEntries().ToString("N0") + " Entries in " + watch.ElapsedMilliseconds.ToString("N0") + "ms" + ". Ready!";
-            timer.Stop();
             searchTerm.Enabled = true;
             goButton.Enabled = true;
             this.Cursor = Cursors.Default;

@@ -113,14 +113,12 @@ namespace Glossary
                     String termDE = terms[0];
                     String termEN = terms[1];
 
-                    termDE = Regex.Replace(termDE, @" ?\{.*?\}", string.Empty);
-                    termDE = Regex.Replace(termDE, @" ?\[.*?\]", string.Empty);
-                    termDE = Regex.Replace(termDE, @" ?\(.*?\)", string.Empty);
+                    // remove brackets and content in brackets
+                    termDE = Regex.Replace(termDE, @" ?[\{\[\(].*?[\}\]\)]", string.Empty);
                     termDE = termDE.Trim();
 
                     // add data to database
-                    DataRow row;
-                    row = dataTable.NewRow();
+                    DataRow row = dataTable.NewRow();
                     row["id"] = counter;
                     row["German"] = termDE;
                     row["English"] = termEN;
@@ -137,6 +135,7 @@ namespace Glossary
             {
                 Console.WriteLine("File {0} does not exist!", DataFilePath);
             }
+            progress = 100;
         }
 
         internal long getNumberOfEntries()
