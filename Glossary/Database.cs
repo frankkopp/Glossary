@@ -15,7 +15,7 @@ namespace Glossary
     class Database
     {
         // path to data file
-        private static String DataFilePath = "../../data/database2.csv";
+        private static String DataFilePath = "../../data/database.csv";
 
         // Levenshtein Distance Max value
         private static int LVD_MAX = 2;
@@ -98,7 +98,8 @@ namespace Glossary
         {
             int counter = 0;
 
-            // open data file and read line by line
+            // open data file and read all lines 
+            // we need to read all lines to be able to know the progress
             if (File.Exists(DataFilePath))
             {
                 string[] lines = System.IO.File.ReadAllLines(DataFilePath);
